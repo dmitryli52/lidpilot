@@ -1,0 +1,134 @@
+/* === ЛидПилот · концепция «Над облаками» – прототип первого экрана (20.11.2026) ======================
+   Вид из кабины на рассвете над облаками + прозрачный индикатор на стекле (HUD).
+   Небо, солнце и облака пока нарисованы кодом – позже их заменит фото (слоты помечены «ФОТО»).
+   ================================================================================================ */
+:root{
+  --sky-top:#123A86;
+  --sky-mid:#4F86D4;
+  --sky-low:#A9C9EE;
+  --dawn:#FFD39A;
+  --hud:#A6FFD0;          /* зелёный индикатор на стекле */
+  --ink:#0F2347;          /* текст на светлом */
+  --ink-2:#4A6083;
+  --white:#FFFFFF;
+  --accent:#FF7A2F;       /* утреннее солнце: кнопка */
+  --display:'Onest',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --hudf:'JetBrains Mono',ui-monospace,monospace;
+  color-scheme:light;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:#F5F8FC;color:var(--ink);font:400 17px/1.6 var(--display);-webkit-font-smoothing:antialiased;overflow-x:clip}
+img{max-width:100%;display:block}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:8px}
+
+/* ---------- сцена ---------- */
+.scene{position:relative;height:100svh;min-height:680px;overflow:hidden;color:var(--white);
+  background:linear-gradient(180deg,var(--sky-top) 0%,#2D62B8 30%,var(--sky-mid) 50%,var(--sky-low) 66%,var(--dawn) 78%,#FFE9CF 86%,#FFFFFF 100%)}
+.sky{position:absolute;inset:0;pointer-events:none}
+.sun{position:absolute;left:62%;top:66%;width:min(70vw,900px);aspect-ratio:1;transform:translate(-50%,-50%);
+  background:radial-gradient(circle,rgba(255,248,230,1) 0,rgba(255,226,170,.85) 6%,rgba(255,200,130,.45) 18%,rgba(255,190,120,.15) 38%,transparent 62%)}
+.haze{position:absolute;left:0;right:0;top:56%;height:20%;background:linear-gradient(180deg,transparent,rgba(255,236,210,.55),transparent);filter:blur(8px)}
+.clouds{position:absolute;left:-8%;right:-8%;bottom:-2px;height:58%;will-change:transform}
+.clouds svg{position:absolute;left:0;bottom:0;width:100%;height:100%}
+.clouds--far{height:46%;opacity:.95}
+.clouds--near{height:46%}
+.drift{animation:drift 70s linear infinite alternate}
+.drift--slow{animation-duration:110s}
+@keyframes drift{from{transform:translateX(-2.5%)}to{transform:translateX(2.5%)}}
+
+/* рамка кабины: стойки и козырёк приборной панели */
+.frame{position:absolute;inset:0;pointer-events:none}
+.frame svg{width:100%;height:100%}
+.glass{position:absolute;inset:0;pointer-events:none;background:
+  linear-gradient(112deg,transparent 30%,rgba(255,255,255,.07) 38%,transparent 46%),
+  linear-gradient(112deg,transparent 58%,rgba(255,255,255,.045) 62%,transparent 66%)}
+
+/* ---------- шапка ---------- */
+.top{position:absolute;z-index:20;top:0;left:0;right:0;padding:22px max(20px,4vw)}
+.top__in{display:flex;align-items:center;gap:28px;max-width:1320px;margin:0 auto}
+.logo{display:inline-flex;align-items:center;gap:10px;font:700 22px/1 var(--display);letter-spacing:-.02em;text-decoration:none;color:#fff}
+.logo svg{width:30px;height:30px}
+.nav{display:flex;gap:26px;margin-left:auto}
+.nav a{color:rgba(255,255,255,.82);text-decoration:none;font-size:15.5px}
+.nav a:hover{color:#fff}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:54px;padding:0 28px;border-radius:999px;border:0;font:600 17px/1 var(--display);text-decoration:none;cursor:pointer;transition:transform .2s,box-shadow .2s,background-color .2s}
+.btn:hover{transform:translateY(-1px)}
+.btn_sun{background:var(--accent);color:#fff;box-shadow:0 12px 30px -10px rgba(255,122,47,.75),inset 0 1px 0 rgba(255,255,255,.35)}
+.btn_glass{background:rgba(255,255,255,.14);color:#fff;box-shadow:inset 0 0 0 1px rgba(255,255,255,.45);backdrop-filter:blur(10px)}
+.top .btn{min-height:44px;padding:0 20px;font-size:15px}
+@media (max-width:980px){.nav{display:none}.top .btn{margin-left:auto}}
+@media (max-width:520px){.top .btn{display:none}.proto{left:16px;right:16px;bottom:10px;font-size:12px;text-align:center;border-radius:12px}}
+
+/* ---------- текст первого экрана ---------- */
+.hero{position:relative;z-index:10;height:100%;max-width:1320px;margin:0 auto;padding:clamp(110px,15vh,170px) max(20px,4vw) 0;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:clamp(20px,3vw,48px);align-items:start}
+.hero__kick{display:inline-flex;align-items:center;gap:10px;padding:7px 14px 7px 8px;border-radius:999px;background:rgba(255,255,255,.14);box-shadow:inset 0 0 0 1px rgba(255,255,255,.3);backdrop-filter:blur(8px);font-size:14.5px}
+.hero__kick b{font:600 11.5px/1 var(--hudf);color:#06301C;background:var(--hud);padding:5px 7px;border-radius:999px}
+.hero h1{margin:22px 0 0;font:700 clamp(42px,5.6vw,80px)/1.02 var(--display);letter-spacing:-.035em;text-wrap:balance;text-shadow:0 2px 30px rgba(10,30,80,.25)}
+.hero__lead{margin:22px 0 32px;max-width:44ch;font-size:clamp(17px,1.35vw,20px);line-height:1.55;color:rgba(255,255,255,.9);text-shadow:0 1px 12px rgba(10,30,80,.25)}
+.hero__cta{display:flex;flex-wrap:wrap;gap:14px}
+
+/* ---------- индикатор на стекле (HUD) ---------- */
+.hud{position:relative;align-self:start;margin-top:clamp(0px,2vh,30px)}
+.hud svg{width:100%;height:auto;overflow:visible;filter:drop-shadow(0 0 6px rgba(166,255,208,.55))}
+.hud text{font-family:var(--hudf);fill:var(--hud)}
+.hud .l{stroke:var(--hud);stroke-width:2;fill:none;stroke-linecap:round}
+.hud .thin{stroke-width:1.3}
+.hud .dash{stroke-dasharray:10 8}
+.hud .box{fill:rgba(10,40,60,.18);stroke:var(--hud);stroke-width:1.6}
+.hud .draw{stroke-dasharray:var(--len,600);stroke-dashoffset:var(--len,600);animation:draw 1.2s cubic-bezier(.6,0,.2,1) forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.hud .fade{opacity:0;animation:fade .6s ease-out forwards}
+@keyframes fade{to{opacity:1}}
+
+/* сообщения из каналов – стеклянные карточки */
+.msgs{position:absolute;inset:0;pointer-events:none}
+.msg{position:absolute;max-width:270px;padding:11px 14px;border-radius:16px;font-size:14.5px;line-height:1.4;color:#0F2347;background:rgba(255,255,255,.78);backdrop-filter:blur(14px);box-shadow:0 18px 40px -18px rgba(10,30,80,.55),inset 0 0 0 1px rgba(255,255,255,.7);opacity:0;transform:translateY(10px) scale(.98);transition:opacity .5s,transform .5s cubic-bezier(.2,.8,.2,1)}
+.msg.on{opacity:1;transform:none}
+.msg small{display:flex;align-items:center;gap:6px;margin-bottom:3px;font:600 12px/1 var(--display);color:var(--c,#2463D1)}
+.msg small::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.msg--ai{background:rgba(255,122,47,.92);color:#fff;box-shadow:0 18px 40px -16px rgba(255,122,47,.8)}
+.msg--ai small{color:#fff}
+.typing{display:inline-flex;gap:4px;padding:3px 0}
+.typing i{width:6px;height:6px;border-radius:50%;background:#fff;opacity:.5;animation:t 1s infinite}
+.typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}
+@keyframes t{50%{opacity:1;transform:translateY(-2px)}}
+
+/* подсказка прокрутить */
+.scroll{position:absolute;z-index:12;left:50%;bottom:22px;transform:translateX(-50%);display:grid;justify-items:center;gap:6px;font-size:13px;color:var(--ink-2)}
+.scroll i{width:22px;height:34px;border-radius:12px;box-shadow:inset 0 0 0 1.5px currentColor;position:relative}
+.scroll i::after{content:"";position:absolute;left:50%;top:7px;width:3px;height:7px;border-radius:2px;background:currentColor;transform:translateX(-50%);animation:wheel 1.6s infinite}
+@keyframes wheel{60%{transform:translate(-50%,9px);opacity:0}}
+
+@media (max-width:980px){
+  .scene{height:auto;min-height:100svh}
+  .hero{grid-template-columns:1fr;padding-top:110px;padding-bottom:300px}
+  .hud{max-width:560px}
+  .msg{max-width:230px;font-size:13.5px}
+  .msg[data-m="1"]{left:0!important}.msg[data-m="2"]{right:0!important}
+  .scene{background:linear-gradient(180deg,var(--sky-top) 0%,#2D62B8 35%,var(--sky-mid) 62%,var(--sky-low) 76%,var(--dawn) 86%,#FFE9CF 92%,#FFFFFF 100%)}
+  .sun{top:84%;width:120vw}
+  .clouds{height:30%}.clouds--far{height:26%}.clouds--near{height:24%}
+}
+
+/* ---------- после снижения: светлый раздел ---------- */
+.after{position:relative;z-index:5;background:#fff;margin-top:-1px}
+.after__in{max-width:1200px;margin:0 auto;padding:clamp(56px,8vw,110px) max(20px,4vw)}
+.after h2{margin:0;font:700 clamp(32px,3.8vw,54px)/1.08 var(--display);letter-spacing:-.03em;max-width:18ch;text-wrap:balance}
+.after p.lead{margin:18px 0 0;max-width:58ch;color:var(--ink-2);font-size:clamp(17px,1.3vw,19px)}
+.night{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px;margin-top:44px}
+.night div{padding:24px;border-radius:22px;background:linear-gradient(180deg,#F4F8FE,#fff);box-shadow:0 1px 0 rgba(15,35,71,.04),0 24px 50px -30px rgba(15,35,71,.35),inset 0 0 0 1px #E3EBF6}
+.night b{display:block;font:700 clamp(34px,3.4vw,50px)/1 var(--display);letter-spacing:-.04em;color:var(--ink)}
+.night span{display:block;margin-top:10px;color:var(--ink-2);font-size:15px;line-height:1.45}
+.night time{display:block;margin-bottom:14px;font:500 13px/1 var(--hudf);color:#2463D1}
+@media (max-width:860px){.night{grid-template-columns:1fr 1fr}}
+
+.proto{position:fixed;z-index:50;right:16px;bottom:16px;padding:9px 14px;border-radius:999px;background:rgba(15,35,71,.82);color:#fff;font-size:13px;backdrop-filter:blur(8px)}
+
+@media (prefers-reduced-motion:reduce){
+  .drift,.typing i,.scroll i::after{animation:none}
+  .hud .draw{animation:none;stroke-dashoffset:0}
+  .hud .fade{animation:none;opacity:1}
+  .msg{transition:none}
+}
