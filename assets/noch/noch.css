@@ -1,0 +1,125 @@
+/* === ЛидПилот · концепция «Пока вы спите» – прототип (20.11.2026) ================================
+   Кино в одну прокрутку: вечер → ночь → рассвет → утро. Небо, город и окна меняются вместе со временем,
+   в центре – телефон, где ИИ-менеджер отвечает клиентам. Картинки пока нарисованы кодом.
+   ================================================================================================ */
+:root{
+  --ink:#101A33;
+  --ink-2:#55627E;
+  --sun:#FF8A3D;          /* кнопка: первый луч */
+  --serif:'Literata',Georgia,'Times New Roman',serif;
+  --sans:'Golos Text',system-ui,-apple-system,'Segoe UI',sans-serif;
+  color-scheme:light;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:#fff;color:var(--ink);font:400 17px/1.6 var(--sans);-webkit-font-smoothing:antialiased;overflow-x:clip}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--sun);outline-offset:3px;border-radius:8px}
+
+/* ---------- история: высокая секция, внутри «прилипший» кадр ---------- */
+.story{position:relative;height:520vh}
+.frame{position:sticky;top:0;height:100svh;min-height:620px;overflow:hidden;color:#fff;
+  --sky1:#060A1C;--sky2:#17203F;background:linear-gradient(180deg,var(--sky1),var(--sky2))}
+.stars{position:absolute;inset:0 0 35% 0;opacity:var(--stars,1);transition:opacity .3s}
+.stars i{position:absolute;width:2px;height:2px;border-radius:50%;background:#fff;opacity:.8;animation:tw 3s ease-in-out infinite}
+@keyframes tw{50%{opacity:.25}}
+.glow{position:absolute;left:50%;bottom:-30%;width:140vw;height:80vh;transform:translateX(-50%);
+  background:radial-gradient(ellipse at center,rgba(255,170,110,var(--dawn,0)) 0,rgba(255,140,90,calc(var(--dawn,0)*.5)) 30%,transparent 65%)}
+.city{position:absolute;left:0;right:0;bottom:0;height:34%}
+.city svg{width:100%;height:100%;display:block}
+.city .bd{fill:var(--bld,#0C1330)}
+.city .w{fill:#FFC66B;opacity:0;transition:opacity .5s}
+.city .w.on{opacity:.9}
+.city.day .w{fill:#CFE2F6}
+.city.day .w.on{opacity:.55}
+
+/* шапка */
+.top{position:absolute;z-index:20;top:0;left:0;right:0;padding:22px max(20px,4vw)}
+.top__in{display:flex;align-items:center;gap:28px;max-width:1320px;margin:0 auto}
+.logo{display:inline-flex;align-items:center;gap:10px;font:700 22px/1 var(--sans);letter-spacing:-.02em;text-decoration:none;color:#fff}
+.logo svg{width:30px;height:30px}
+.nav{display:flex;gap:26px;margin-left:auto}
+.nav a{color:rgba(255,255,255,.75);text-decoration:none;font-size:15.5px}
+.nav a:hover{color:#fff}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:54px;padding:0 28px;border-radius:999px;border:0;font:600 17px/1 var(--sans);text-decoration:none;cursor:pointer;transition:transform .2s,background-color .2s}
+.btn:hover{transform:translateY(-1px)}
+.btn_sun{background:var(--sun);color:#fff;box-shadow:0 12px 34px -10px rgba(255,138,61,.8)}
+.btn_ghost{background:rgba(255,255,255,.1);color:#fff;box-shadow:inset 0 0 0 1px rgba(255,255,255,.4);backdrop-filter:blur(8px)}
+.top .btn{min-height:44px;padding:0 20px;font-size:15px}
+@media (max-width:980px){.nav{display:none}.top .btn{margin-left:auto}}
+@media (max-width:520px){.top .btn{display:none}}
+
+/* кадр: подпись слева, телефон справа */
+.shot{position:relative;z-index:10;height:100%;max-width:1320px;margin:0 auto;padding:100px max(20px,4vw) 18vh;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:clamp(20px,4vw,72px);align-items:center}
+.clock{font:500 clamp(60px,7vw,108px)/.9 var(--serif);letter-spacing:-.04em;font-variant-numeric:tabular-nums lining-nums;color:#fff;text-shadow:0 0 60px rgba(255,200,140,.25)}
+.clock small{display:block;margin-top:14px;font:500 15px/1.3 var(--sans);letter-spacing:0;color:rgba(255,255,255,.65)}
+.cap{position:relative;margin-top:26px;min-height:13em}
+.cap__it{position:absolute;inset:0 auto auto 0;opacity:0;transform:translateY(14px);transition:opacity .5s,transform .6s cubic-bezier(.2,.8,.2,1);pointer-events:none}
+.cap__it.on{opacity:1;transform:none;pointer-events:auto}
+.cap h1,.cap h2{margin:0;font:600 clamp(34px,3.8vw,56px)/1.08 var(--serif);letter-spacing:-.02em;text-wrap:balance;max-width:15ch}
+.cap p{margin:18px 0 0;max-width:44ch;font-size:clamp(17px,1.3vw,19.5px);line-height:1.55;color:rgba(255,255,255,.82)}
+.cap .cta{display:flex;flex-wrap:wrap;gap:14px;margin-top:28px}
+.prog{display:flex;gap:8px;margin-top:8px}
+.prog i{width:34px;height:3px;border-radius:2px;background:rgba(255,255,255,.25);transition:background-color .3s}
+.prog i.on{background:#fff}
+
+/* телефон */
+.phone{justify-self:center;width:min(330px,80vw);aspect-ratio:9/19;border-radius:46px;padding:12px;background:linear-gradient(160deg,#2A2F3D,#0D1018);box-shadow:0 0 0 1.5px rgba(255,255,255,.12),0 50px 100px -30px rgba(0,0,0,.75),0 0 120px -20px rgba(255,190,120,var(--phoneGlow,.35))}
+.screen{position:relative;height:100%;border-radius:36px;overflow:hidden;background:#0F1626;display:flex;flex-direction:column}
+.screen::before{content:"";position:absolute;top:10px;left:50%;width:96px;height:26px;border-radius:14px;background:#000;transform:translateX(-50%);z-index:3}
+.bar{display:flex;align-items:center;gap:10px;padding:48px 16px 12px;background:#141D31;border-bottom:1px solid rgba(255,255,255,.06)}
+.bar i{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font:700 14px/1 var(--sans);color:#fff;background:var(--chc,#2AABEE)}
+.bar b{display:block;font-size:14.5px;color:#fff}
+.bar span{display:block;font-size:12px;color:#8FA0BF}
+.chat{flex:1;display:flex;flex-direction:column;justify-content:flex-end;gap:8px;padding:14px 12px 18px;background:radial-gradient(120% 80% at 50% 0,#17213A,#0E1525)}
+.b{max-width:84%;padding:9px 12px;border-radius:16px;font-size:14px;line-height:1.4;color:#E9EEF8;background:#1C2740;opacity:0;transform:translateY(8px);animation:pop .45s cubic-bezier(.2,.8,.2,1) forwards}
+.b.me{align-self:flex-end;background:#FF8A3D;color:#fff;border-bottom-right-radius:6px}
+.b.them{border-bottom-left-radius:6px}
+.b time{display:block;margin-top:3px;font-size:11px;opacity:.65;text-align:right}
+.b.sys{align-self:center;max-width:92%;background:rgba(60,214,140,.14);color:#7CF2B5;text-align:center;font-weight:500}
+.b.rep{align-self:stretch;max-width:100%;background:#fff;color:var(--ink)}
+.b.rep b{display:block;margin-bottom:4px}
+@keyframes pop{to{opacity:1;transform:none}}
+
+/* утро: подписи тёмным по светлому небу */
+.frame.light{color:var(--ink)}
+.frame.light .clock{color:var(--ink);text-shadow:none}
+.frame.light .clock small,.frame.light .cap p{color:var(--ink-2)}
+.frame.light .logo,.frame.light .nav a{color:var(--ink)}
+.frame.light .btn_ghost{color:var(--ink);background:rgba(255,255,255,.6);box-shadow:inset 0 0 0 1px rgba(16,26,51,.2)}
+.frame.light .prog i{background:rgba(16,26,51,.18)}.frame.light .prog i.on{background:var(--ink)}
+
+.hint{position:absolute;z-index:12;left:50%;bottom:20px;transform:translateX(-50%);font-size:13px;color:rgba(255,255,255,.6);transition:opacity .3s}
+
+@media (max-width:900px){
+  .shot{grid-template-columns:1fr;align-content:start;padding-top:92px;gap:18px}
+  .clock{font-size:64px}
+  .cap{min-height:16.5em;margin-top:14px}
+  .cap h1,.cap h2{font-size:clamp(30px,8vw,40px)}
+  .cap p{font-size:16px}
+  .phone{width:min(200px,54vw);border-radius:36px;padding:9px}
+  .screen{border-radius:28px}
+  .bar{padding-top:40px}
+  .b{font-size:12.5px}
+}
+@media (max-width:900px) and (max-height:760px){.phone{width:160px}.cap{min-height:15.5em}.clock{font-size:52px}}
+
+/* ---------- после истории: светлый раздел ---------- */
+.after{background:#fff;position:relative;z-index:2}
+.after__in{max-width:1200px;margin:0 auto;padding:clamp(56px,8vw,110px) max(20px,4vw)}
+.after h2{margin:0;font:600 clamp(32px,3.8vw,54px)/1.1 var(--serif);letter-spacing:-.02em;max-width:20ch}
+.after p{margin:16px 0 0;max-width:60ch;color:var(--ink-2)}
+.nums{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px;margin-top:40px}
+.nums div{padding:24px;border-radius:22px;background:#F6F8FC;box-shadow:inset 0 0 0 1px #E4EAF4}
+.nums b{display:block;font:600 clamp(34px,3.4vw,50px)/1 var(--serif);letter-spacing:-.03em}
+.nums span{display:block;margin-top:10px;color:var(--ink-2);font-size:15px;line-height:1.45}
+@media (max-width:860px){.nums{grid-template-columns:1fr 1fr}}
+
+.proto{position:fixed;z-index:50;right:16px;bottom:16px;padding:9px 14px;border-radius:999px;background:rgba(16,26,51,.85);color:#fff;font-size:13px;backdrop-filter:blur(8px)}
+@media (max-width:520px){.proto{left:16px;right:16px;bottom:10px;font-size:12px;text-align:center;border-radius:12px}}
+
+@media (prefers-reduced-motion:reduce){
+  .stars i{animation:none}
+  .b{animation:none;opacity:1;transform:none}
+  .cap__it,.city .w{transition:none}
+}
