@@ -1,0 +1,30 @@
+/* === Дополнения ЛидПилота поверх стилей платформы (site.css / pages.css / blog.css) === */
+
+/* Согласие на обработку ПДн в форме заявки (152-ФЗ) */
+.lead__ok{display:flex;gap:10px;align-items:flex-start;font-size:14px;line-height:1.45;color:var(--ink2);cursor:pointer;text-align:left}
+.lead__ok input{flex:none;width:20px;height:20px;margin:1px 0 0;accent-color:var(--acc);cursor:pointer}
+.lead__ok input[aria-invalid="true"]{outline:2px solid #D8465F;outline-offset:2px;border-radius:4px}
+.lead__ok a{color:var(--acc)}
+
+/* Подвал: ссылка на платформу-партнёра */
+.footer__about a{color:var(--acc);text-decoration:none;font-weight:600}
+.footer__about a:hover{text-decoration:underline}
+.footer__legal a{color:inherit}
+
+/* Cookie-баннер */
+.cookie{position:fixed;left:16px;right:16px;bottom:16px;z-index:9999;max-width:560px;padding:18px 20px;border-radius:20px;background:#fff;box-shadow:var(--sh-deep);font-size:14.5px;line-height:1.5;color:var(--ink2)}
+.cookie[hidden]{display:none}
+.cookie a{color:var(--acc)}
+.cookie__btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.cookie .btn{min-height:44px;padding:0 22px;font-size:15px}
+
+/* Пометка «результаты платформы» у кейсов */
+.partner-note{display:inline-flex;align-items:center;gap:8px;margin-top:18px;padding:8px 14px;border-radius:999px;background:rgba(91,71,240,.08);color:var(--acc);font-size:14px;font-weight:600}
+.partner-note .ic{font-size:16px}
+
+/* Страница политики */
+.legal-doc{max-width:860px}
+.legal-doc h2{font-size:clamp(24px,2.4vw,32px);margin:40px 0 14px}
+.legal-doc p,.legal-doc li{color:var(--ink2);line-height:1.65}
+.legal-doc p+p{margin-top:12px}
+.legal-doc ul{padding-left:22px;margin:10px 0}
