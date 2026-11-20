@@ -1,0 +1,122 @@
+/* === ЛидПилот · «Центр управления полётом» – прототип (21.11.2026) ===============================
+   Старт ракеты на рассвете: светлое небо, белая ракета, обратный отсчёт = ответ клиенту за 5 секунд.
+   Шрифты: Unbounded (широкий, «космический») + Golos Text; цифры телеметрии – JetBrains Mono.
+   ================================================================================================ */
+:root{
+  --ink:#0E1B33;
+  --ink-2:#4F5D78;
+  --fire:#FF5A1F;        /* старт, кнопка */
+  --fire-d:#E14810;
+  --go:#12A66A;          /* «норма», готово */
+  --sky1:#BFD9F5;
+  --sky2:#F7E6DA;
+  --sky3:#FFC9A0;
+  --panel:#FFFFFF;
+  --line:#DCE3EE;
+  --display:'Unbounded',system-ui,sans-serif;
+  --sans:'Golos Text',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,monospace;
+  --wrap:min(1240px,100% - 2*max(20px,4vw));
+  color-scheme:light;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{margin:0;background:#F6F8FB;color:var(--ink);font:400 17px/1.6 var(--sans);-webkit-font-smoothing:antialiased;overflow-x:clip}
+a{color:inherit}
+h1,h2,h3{margin:0;font-family:var(--display);font-weight:600;letter-spacing:-.02em;line-height:1.08;text-wrap:balance}
+.wrap{width:var(--wrap);margin-inline:auto}
+:focus-visible{outline:2px solid var(--fire);outline-offset:3px;border-radius:8px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:56px;padding:0 30px;border-radius:14px;border:0;font:600 17px/1 var(--sans);text-decoration:none;cursor:pointer;transition:transform .2s,background-color .2s}
+.btn:hover{transform:translateY(-1px)}
+.btn_fire{background:var(--fire);color:#fff;box-shadow:0 14px 30px -12px rgba(255,90,31,.7)}
+.btn_fire:hover{background:var(--fire-d)}
+.btn_line{background:rgba(255,255,255,.7);color:var(--ink);box-shadow:inset 0 0 0 1.5px rgba(14,27,51,.25);backdrop-filter:blur(6px)}
+
+.top{position:absolute;z-index:30;top:0;left:0;right:0}
+.top__in{width:var(--wrap);margin:0 auto;display:flex;align-items:center;gap:28px;min-height:78px}
+.logo{display:inline-flex;align-items:center;gap:10px;font:600 19px/1 var(--display);text-decoration:none}
+.logo svg{width:30px;height:30px}
+.nav{display:flex;gap:24px;margin-left:auto}
+.nav a{color:var(--ink-2);text-decoration:none;font-size:15px}
+.nav a:hover{color:var(--ink)}
+.top .btn{min-height:44px;padding:0 20px;font-size:15px}
+@media (max-width:980px){.nav{display:none}.top .btn{margin-left:auto}}
+@media (max-width:520px){.top .btn{display:none}}
+
+/* ---------- старт ---------- */
+.pad{position:relative;overflow:hidden;min-height:100svh;background:linear-gradient(180deg,var(--sky1) 0%,#DCE8F6 38%,var(--sky2) 64%,var(--sky3) 82%,#FFB27E 100%)}
+.sunrise{position:absolute;right:8%;bottom:6%;width:min(60vw,760px);aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,rgba(255,244,226,1) 0,rgba(255,205,150,.75) 14%,rgba(255,170,110,.25) 40%,transparent 66%)}
+.hills{position:absolute;left:0;right:0;bottom:0;height:22%}
+.hills svg{width:100%;height:100%;display:block}
+.pad__grid{position:relative;z-index:10;width:var(--wrap);margin:0 auto;min-height:100svh;display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:24px;align-items:center;padding:110px 0 60px}
+.kick{display:inline-flex;align-items:center;gap:10px;font:500 13px/1 var(--mono);color:var(--ink-2)}
+.kick b{color:#fff;background:var(--ink);padding:6px 9px;border-radius:6px;font-weight:600}
+.pad h1{margin-top:22px;font-size:clamp(38px,4.8vw,72px)}
+.lead{margin:22px 0 30px;max-width:46ch;font-size:clamp(17px,1.35vw,20px);color:var(--ink-2)}
+.cta{display:flex;flex-wrap:wrap;gap:14px}
+
+/* обратный отсчёт */
+.count{display:flex;align-items:center;gap:18px;margin-top:34px;padding:16px 20px;border-radius:18px;background:rgba(255,255,255,.72);backdrop-filter:blur(10px);box-shadow:0 0 0 1px rgba(255,255,255,.9),0 20px 40px -26px rgba(14,27,51,.5);max-width:520px}
+.count__t{font:600 clamp(34px,3.6vw,48px)/1 var(--mono);color:var(--ink);font-variant-numeric:tabular-nums;min-width:4.2ch}
+.count__t.go{color:var(--go)}
+.count__s{font-size:15px;color:var(--ink-2);line-height:1.4}
+.count__s b{display:block;color:var(--ink);font-weight:600}
+
+/* ракета */
+.stage{position:relative;height:min(78vh,720px)}
+.stage svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.rocket{transform-box:view-box;transition:transform 2.4s cubic-bezier(.55,0,.75,.2)}
+.rocket.up{transform:translateY(-1200px)}
+.flame{opacity:0;transform-origin:center top;transform-box:fill-box}
+.ignite .flame{opacity:1;animation:fl .12s infinite alternate}
+@keyframes fl{to{transform:scaleY(1.18) scaleX(.92)}}
+.smoke circle{fill:#fff;opacity:0;transition:opacity .8s}
+.ignite .smoke circle{opacity:.95}
+.trail{fill:none;stroke:var(--fire);stroke-width:3;stroke-linecap:round;stroke-dasharray:6 10;opacity:0;transition:opacity .6s}
+.orbit .trail{opacity:.85}
+.orb{opacity:0;transition:opacity .6s .4s}
+.orbit .orb{opacity:1}
+.orb text{font:600 15px var(--mono);fill:var(--go)}
+@media (max-width:980px){.pad__grid{grid-template-columns:1fr;padding-top:96px}.stage{height:440px}}
+
+/* экраны ЦУП */
+.mcc{position:relative;z-index:12;margin-top:-56px}
+.mcc__grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.scr{border-radius:18px;padding:16px;background:#0E1B33;color:#DDE6F5;box-shadow:0 30px 60px -30px rgba(14,27,51,.6);min-height:150px}
+.scr__h{display:flex;justify-content:space-between;font:500 12px/1 var(--mono);color:#8FA2C5;margin-bottom:12px}
+.scr__h b{color:#5BF0A8;font-weight:500}
+.scr p{margin:0 0 8px;font-size:14px;line-height:1.4}
+.scr p.ai{color:#FFB08A}
+@media (max-width:860px){.mcc__grid{grid-template-columns:1fr}}
+
+/* этапы полёта */
+.sec{padding:clamp(64px,8vw,110px) 0}
+.sec h2{font-size:clamp(28px,3.2vw,44px);max-width:22ch}
+.sec .sub{margin-top:14px;color:var(--ink-2);max-width:60ch}
+.flight{position:relative;margin-top:44px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
+.flight::before{content:"";position:absolute;left:0;right:0;top:27px;height:2px;background:repeating-linear-gradient(90deg,var(--fire) 0 10px,transparent 10px 18px)}
+.st{position:relative;padding-top:64px}
+.st i{position:absolute;top:0;left:0;width:56px;height:56px;border-radius:50%;display:grid;place-items:center;background:#fff;box-shadow:0 0 0 2px var(--fire);font:600 14px/1 var(--mono);color:var(--fire);font-style:normal}
+.st:last-child i{background:var(--fire);color:#fff}
+.st h3{font-size:19px}
+.st p{margin-top:8px;color:var(--ink-2);font-size:15.5px;line-height:1.55}
+@media (max-width:860px){.flight{grid-template-columns:1fr 1fr}.flight::before{display:none}}
+
+/* телеметрия миссий */
+.tele{margin-top:40px;border-radius:22px;overflow:hidden;background:var(--panel);box-shadow:0 0 0 1px var(--line),0 30px 60px -40px rgba(14,27,51,.4)}
+.tele__row{display:grid;grid-template-columns:minmax(0,1.6fr) repeat(3,minmax(0,.6fr));gap:16px;padding:18px 22px;border-top:1px solid var(--line);align-items:center}
+.tele__row:first-child{border-top:0;font:500 12.5px/1 var(--mono);color:var(--ink-2);background:#F7F9FC}
+.tele__row b{font-family:var(--display);font-weight:600;font-size:16px;line-height:1.3}
+.tele__row small{display:block;color:var(--ink-2);font-size:13px}
+.tele__row .n{font:600 18px/1 var(--mono);text-align:right}
+.tele__row .ok{color:var(--go)}
+@media (max-width:760px){.tele{overflow-x:auto}.tele__row{min-width:640px}}
+
+.proto{position:fixed;z-index:50;right:16px;bottom:16px;padding:9px 14px;border-radius:999px;background:rgba(14,27,51,.86);color:#fff;font-size:13px}
+@media (max-width:520px){.proto{left:16px;right:16px;bottom:10px;font-size:12px;text-align:center;border-radius:12px}}
+
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .rocket{transition:none}
+  .ignite .flame{animation:none}
+}
