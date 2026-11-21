@@ -65,13 +65,13 @@
   var p = 0, mx = 0, my = 0, need = false;
   function apply() {
     need = false;
-    var s = 1.05 + p * 0.12;
-    if (img) img.style.transform = 'translate3d(' + (mx * 10).toFixed(1) + 'px,' + (my * 7 - p * 60).toFixed(1) + 'px,0) scale(' + s.toFixed(3) + ')';
+    var s = 1.06 + p * 0.14;
+    if (img) img.style.transform = 'translate3d(' + (mx * 18 + p * 10).toFixed(1) + 'px,' + (my * 12 + p * 100).toFixed(1) + 'px,0) scale(' + s.toFixed(3) + ')';
     if (hero) {
-      hero.style.transform = 'translateY(' + (-p * 120).toFixed(1) + 'px)';
-      hero.style.opacity = String(Math.max(0, 1 - p * 1.45));
+      hero.style.transform = 'translateY(' + (-p * 190).toFixed(1) + 'px)';
+      hero.style.opacity = String(Math.max(0, 1 - p));
     }
-    if (hud) hud.style.transform = 'translate3d(' + (-mx * 6).toFixed(1) + 'px,' + (-my * 4 - p * 40).toFixed(1) + 'px,0)';
+    if (hud) hud.style.transform = 'translate3d(' + (-mx * 10).toFixed(1) + 'px,' + (-my * 6 + p * 70).toFixed(1) + 'px,0)';
   }
   function request() { if (!need) { need = true; requestAnimationFrame(apply); } }
   function reset() {

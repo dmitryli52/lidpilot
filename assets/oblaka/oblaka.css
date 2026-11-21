@@ -21,7 +21,7 @@ a{color:inherit}
 
 /* ---------- сцена: фото кабины ---------- */
 .scene{position:relative;height:100svh;min-height:720px;overflow:hidden;color:#fff;background:#0B2044;isolation:isolate}
-.bg{position:absolute;inset:-3%;z-index:0}
+.bg{position:absolute;inset:-4%;z-index:0}
 .bg__img{width:100%;height:100%;object-fit:cover;object-position:60% 50%;transform:scale(1.05);will-change:transform;backface-visibility:hidden}
 .shade{position:absolute;inset:0;z-index:1;pointer-events:none;background:
   linear-gradient(180deg,rgba(4,12,30,.74) 0%,rgba(4,12,30,.34) 15%,rgba(4,12,30,0) 37%),
