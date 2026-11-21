@@ -1,5 +1,6 @@
 /* === ЛидПилот · концепция «Над облаками» – прототип первого экрана (21.11.2026) =====================
-   Небо – настоящая фотография (sky-hero-*.webp). HUD: шкала каналов, два показания, живая переписка.
+   Небо – настоящая фотография. Анимации: параллакс фото и прибора, построчное появление заголовка,
+   набегающие цифры, прорисовка шкалы каналов. Всё отключается при prefers-reduced-motion.
    ================================================================================================ */
 :root{
   --ink:#0B1B33;
@@ -9,7 +10,6 @@
   --hud:#A6FFD0;
   --display:'Onest',system-ui,-apple-system,'Segoe UI',sans-serif;
   --mono:'JetBrains Mono',ui-monospace,monospace;
-  --wrap:min(1320px,100% - 2*max(20px,4vw));
   color-scheme:light;
 }
 *,*::before,*::after{box-sizing:border-box}
@@ -21,8 +21,8 @@ a{color:inherit}
 
 /* ---------- сцена: фото кабины ---------- */
 .scene{position:relative;height:100svh;min-height:720px;overflow:hidden;color:#fff;background:#0B2044;isolation:isolate}
-.bg{position:absolute;inset:0;z-index:0}
-.bg__img{width:100%;height:100%;object-fit:cover;object-position:60% 50%;transform:scale(1.05);will-change:transform}
+.bg{position:absolute;inset:-3%;z-index:0}
+.bg__img{width:100%;height:100%;object-fit:cover;object-position:60% 50%;transform:scale(1.05);will-change:transform;backface-visibility:hidden}
 .shade{position:absolute;inset:0;z-index:1;pointer-events:none;background:
   linear-gradient(180deg,rgba(4,12,30,.74) 0%,rgba(4,12,30,.34) 15%,rgba(4,12,30,0) 37%),
   linear-gradient(92deg,rgba(4,12,30,.68) 0%,rgba(4,12,30,.32) 28%,rgba(4,12,30,0) 57%),
@@ -45,7 +45,7 @@ a{color:inherit}
 .top .btn{min-height:44px;padding:0 20px;font-size:15px;white-space:nowrap}
 
 /* ---------- текст первого экрана ---------- */
-.hero{position:relative;z-index:10;height:100%;max-width:1320px;margin:0 auto;padding:clamp(104px,13vh,150px) max(20px,4vw) 80px;display:grid;grid-template-columns:minmax(0,1.05fr) minmax(380px,.95fr);gap:clamp(28px,4vw,72px);align-items:center}
+.hero{position:relative;z-index:10;height:100%;max-width:1320px;margin:0 auto;padding:clamp(104px,13vh,150px) max(20px,4vw) 80px;display:grid;grid-template-columns:minmax(0,1.05fr) minmax(380px,.95fr);gap:clamp(28px,4vw,72px);align-items:center;will-change:transform,opacity}
 .copy{max-width:600px}
 .kick{display:inline-flex;align-items:center;gap:10px;padding:6px 14px 6px 6px;border-radius:999px;background:rgba(255,255,255,.12);box-shadow:inset 0 0 0 1px rgba(255,255,255,.28);backdrop-filter:blur(10px);font-size:14px;color:#fff}
 .kick b{font:600 11px/1 var(--mono);color:#06301C;background:var(--hud);padding:5px 8px;border-radius:999px;letter-spacing:.06em}
@@ -55,39 +55,64 @@ h1{margin:24px 0 0;font:700 clamp(44px,5vw,76px)/1.02 var(--display);letter-spac
 .facts{display:flex;flex-wrap:wrap;gap:10px 26px;margin:30px 0 0;font:500 12.5px/1.4 var(--mono);letter-spacing:.02em;color:rgba(255,255,255,.62)}
 .facts b{color:#fff;font-weight:600}
 
+/* ---------- появление текста ---------- */
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+.anim{animation:fadeUp .85s cubic-bezier(.2,.8,.2,1) both}
+.anim-1{animation-delay:.16s}
+.anim-2{animation-delay:.52s}
+.anim-3{animation-delay:.64s}
+.anim-4{animation-delay:.76s}
+.ln{display:block;overflow:hidden;padding-bottom:.08em;margin-bottom:-.08em}
+.ln>span{display:block;transform:translateY(112%);animation:lineUp .95s cubic-bezier(.2,.8,.2,1) both}
+.ln:nth-child(2)>span{animation-delay:.13s}
+@keyframes lineUp{to{transform:none}}
+
 /* ---------- HUD: прибор на стекле ---------- */
-.hud{position:relative;width:100%;max-width:560px;justify-self:end;padding:20px 22px 18px;border-radius:20px;
+.hud{position:relative;width:100%;max-width:560px;justify-self:end;padding:20px 22px 18px;border-radius:20px;overflow:hidden;
   background:linear-gradient(180deg,rgba(8,20,42,.88),rgba(6,15,32,.8));
   border:1px solid rgba(166,255,208,.3);
-  box-shadow:0 50px 110px -34px rgba(2,8,20,.95),0 2px 0 rgba(255,255,255,.06) inset,inset 0 0 60px rgba(4,12,28,.55);
-  backdrop-filter:blur(14px) saturate(115%)}
+  box-shadow:0 50px 110px -34px rgba(2,8,20,.95),inset 0 2px 0 rgba(255,255,255,.06),inset 0 0 60px rgba(4,12,28,.55);
+  backdrop-filter:blur(14px) saturate(115%);
+  will-change:transform;
+  animation:hudIn .9s .4s both}
+@keyframes hudIn{from{opacity:0}to{opacity:1}}
+.hud::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  background:linear-gradient(105deg,transparent 38%,rgba(255,255,255,.09) 50%,transparent 62%);
+  transform:translateX(-120%);animation:sweep 1.8s 1.15s cubic-bezier(.4,0,.2,1) both}
+@keyframes sweep{to{transform:translateX(120%)}}
+
 .hud__top{display:flex;align-items:center;justify-content:space-between;font:600 10.5px/1 var(--mono);letter-spacing:.16em;color:rgba(255,255,255,.66)}
 .hud__live{display:inline-flex;align-items:center;gap:7px;color:var(--hud);letter-spacing:.1em}
 .hud__live::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor;box-shadow:0 0 0 4px rgba(166,255,208,.16);animation:live 2.4s infinite}
 @keyframes live{50%{box-shadow:0 0 0 8px rgba(166,255,208,0)}}
 
 .tape{display:block;width:100%;height:auto;margin:14px 0 4px;overflow:visible}
-.tape .ln{stroke:rgba(166,255,208,.62);stroke-width:1.2;fill:none}
-.tape .tick{stroke:rgba(255,255,255,.42);stroke-width:1.2}
-.tape .lbl{fill:rgba(255,255,255,.86);font:600 11.5px var(--mono);letter-spacing:.09em}
-.tape .deal{fill:var(--hud);font:600 10px var(--mono);letter-spacing:.16em}
-.tape .tri{fill:var(--hud)}
+.tape .ln{stroke:rgba(166,255,208,.62);stroke-width:1.2;fill:none;stroke-dasharray:100;stroke-dashoffset:100;animation:draw 1.15s .8s cubic-bezier(.6,0,.2,1) forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.tape .tick{stroke:rgba(255,255,255,.42);stroke-width:1.2;opacity:0;animation:tickIn .45s both;animation-delay:calc(.9s + var(--i,0) * .012s)}
+@keyframes tickIn{from{opacity:0}to{opacity:1}}
+.tape .lbl{fill:rgba(255,255,255,.86);font:600 11.5px var(--mono);letter-spacing:.09em;opacity:0;animation:tickIn .5s both;animation-delay:calc(1.15s + var(--i,0) * .07s)}
+.tape .tri{fill:var(--hud);opacity:0;animation:triDrop .55s 1.55s cubic-bezier(.2,.8,.2,1) both}
+@keyframes triDrop{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
+.tape .deal{fill:var(--hud);font:600 10px var(--mono);letter-spacing:.16em;opacity:0;animation:tickIn .5s 1.7s both}
 
 .hud__read{display:grid;grid-template-columns:1fr 1fr;margin:6px 0 14px;padding:14px 0;border-top:1px solid rgba(255,255,255,.1);border-bottom:1px solid rgba(255,255,255,.1)}
 .hud__read>div{padding:0 2px}
 .hud__read>div+div{padding-left:22px;border-left:1px solid rgba(255,255,255,.12)}
 .hud__read span{display:block;font:600 10px/1 var(--mono);letter-spacing:.16em;color:rgba(255,255,255,.64)}
-.hud__read b{display:block;margin-top:9px;font:600 40px/1 var(--display);letter-spacing:-.03em;color:#fff}
+.hud__read b{display:block;margin-top:9px;font:600 40px/1 var(--display);letter-spacing:-.03em;color:#fff;font-variant-numeric:tabular-nums}
 
 .hud__chat{display:grid;gap:7px;font-size:13.5px;line-height:1.4;transition:opacity .25s}
 .hud__chat.swapping{opacity:.38}
-.hud__chat p{margin:0;display:grid;grid-template-columns:104px 1fr;gap:10px;align-items:baseline}
+.hud__chat p{margin:0;display:grid;grid-template-columns:104px 1fr;gap:10px;align-items:baseline;opacity:0;animation:fadeUp .6s cubic-bezier(.2,.8,.2,1) both}
+.hud__chat p:nth-child(1){animation-delay:1.35s}
+.hud__chat p:nth-child(2){animation-delay:1.5s}
 .hud__chat .tag{font:600 9.5px/1.6 var(--mono);letter-spacing:.06em;color:rgba(255,255,255,.58)}
 .hud__chat .q span:last-child{color:rgba(255,255,255,.9)}
 .hud__chat .a span:last-child{color:var(--hud)}
 
 /* ---------- подсказка прокрутки ---------- */
-.scroll{position:absolute;z-index:12;left:50%;bottom:26px;transform:translateX(-50%);display:grid;justify-items:center;gap:8px;font:500 10.5px/1 var(--mono);letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.62)}
+.scroll{position:absolute;z-index:12;left:50%;bottom:26px;transform:translateX(-50%);display:grid;justify-items:center;gap:8px;font:500 10.5px/1 var(--mono);letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.62);opacity:0;animation:fadeUp .8s 1.6s both}
 .scroll i{width:20px;height:32px;border-radius:12px;box-shadow:inset 0 0 0 1.5px currentColor;position:relative}
 .scroll i::after{content:"";position:absolute;left:50%;top:7px;width:3px;height:7px;border-radius:2px;background:currentColor;transform:translateX(-50%);animation:wheel 1.6s infinite}
 @keyframes wheel{60%{transform:translate(-50%,9px);opacity:0}}
@@ -103,6 +128,10 @@ h1{margin:24px 0 0;font:700 clamp(44px,5vw,76px)/1.02 var(--display);letter-spac
 .night time{display:block;margin-bottom:14px;font:500 11px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:#2F6BFF}
 .night b{display:block;font:700 clamp(32px,3.2vw,46px)/1 var(--display);letter-spacing:-.04em}
 .night span{display:block;margin-top:10px;color:var(--ink-2);font-size:15px;line-height:1.45}
+
+/* появление при прокрутке */
+.js [data-in]{opacity:0;transform:translateY(22px);transition:opacity .75s cubic-bezier(.2,.8,.2,1),transform .75s cubic-bezier(.2,.8,.2,1);transition-delay:var(--d,0s)}
+.js [data-in].in{opacity:1;transform:none}
 
 /* ---------- плашка прототипа ---------- */
 .proto{position:fixed;z-index:60;right:14px;bottom:14px;padding:9px 13px;border-radius:999px;background:rgba(9,22,44,.82);color:#fff;font-size:12.5px;backdrop-filter:blur(8px);box-shadow:0 12px 30px -14px rgba(0,0,0,.6)}
@@ -152,12 +181,16 @@ h1{margin:24px 0 0;font:700 clamp(44px,5vw,76px)/1.02 var(--display);letter-spac
   .hud__read>div+div{padding-left:16px}
   .after .night{gap:12px}
   .night div{padding:20px 18px}
-  .proto{font-size:11.5px;padding:8px 11px;right:10px;bottom:10px}
+  .proto{font-size:11.5px;padding:8px 11px}
 }
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
+  .anim,.ln>span,.hud,.hud::after,.tape .ln,.tape .tick,.tape .lbl,.tape .tri,.tape .deal,.hud__chat p,.scroll{animation:none!important}
+  .ln>span{transform:none}
+  .tape .ln{stroke-dashoffset:0}
+  .tape .tick,.tape .lbl,.tape .tri,.tape .deal,.hud__chat p,.scroll{opacity:1}
+  .js [data-in]{opacity:1;transform:none;transition:none}
   .bg__img{transform:none}
-  .scroll i::after{animation:none}
-  .hud__live::before{animation:none}
+  .scroll i::after,.hud__live::before{animation:none}
   .hud__chat{transition:none}
 }
