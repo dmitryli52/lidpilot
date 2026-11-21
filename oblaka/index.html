@@ -65,13 +65,13 @@
   var p = 0, need = false;
   function apply() {
     need = false;
-    var s = 1.10 + p * 0.24;
-    if (img) img.style.transform = 'translate3d(' + (p * 14).toFixed(1) + 'px,' + (p * 180).toFixed(1) + 'px,0) scale(' + s.toFixed(3) + ')';
+    var s = 1.10 + p * 0.26;
+    if (img) img.style.transform = 'translate3d(' + (p * 16).toFixed(1) + 'px,' + (p * 200).toFixed(1) + 'px,0) scale(' + s.toFixed(3) + ')';
     if (hero) {
-      hero.style.transform = 'translateY(' + (-p * 300).toFixed(1) + 'px)';
-      hero.style.opacity = String(Math.max(0, 1 - p * 1.05));
+      hero.style.transform = 'translateY(' + (-p * 330).toFixed(1) + 'px)';
+      hero.style.opacity = String(Math.max(0, 1 - p * 1.02));
     }
-    if (hud) hud.style.transform = 'translate3d(0,' + (p * 120).toFixed(1) + 'px,0)';
+    if (hud) hud.style.transform = 'translate3d(0,' + (p * 135).toFixed(1) + 'px,0)';
   }
   function request() { if (!need) { need = true; requestAnimationFrame(apply); } }
   function reset() {
