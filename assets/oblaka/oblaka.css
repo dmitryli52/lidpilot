@@ -45,7 +45,7 @@ a{color:inherit}
 .top .btn{min-height:44px;padding:0 20px;font-size:15px;white-space:nowrap}
 
 /* ---------- текст первого экрана ---------- */
-.hero{position:relative;z-index:10;height:100%;max-width:1360px;margin:0 auto;padding:clamp(104px,13vh,150px) max(20px,4vw) clamp(88px,10vh,110px);display:grid;grid-template-columns:minmax(0,1.12fr) minmax(360px,.88fr);gap:clamp(24px,2.4vw,36px);align-content:end;align-items:end;will-change:transform,opacity}
+.hero{position:relative;z-index:10;height:100%;max-width:1360px;margin:0 auto;padding:clamp(104px,13vh,150px) max(20px,4vw) 80px;display:grid;grid-template-columns:minmax(0,1.12fr) minmax(360px,.88fr);gap:clamp(24px,2.4vw,36px);align-content:center;align-items:end;will-change:transform,opacity}
 .copy{max-width:700px}
 .kick{display:inline-flex;align-items:center;gap:10px;padding:6px 14px 6px 6px;border-radius:999px;background:rgba(255,255,255,.12);box-shadow:inset 0 0 0 1px rgba(255,255,255,.28);backdrop-filter:blur(10px);font-size:14px;color:#fff}
 .kick b{font:600 11px/1 var(--mono);color:#06301C;background:var(--hud);padding:5px 8px;border-radius:999px;letter-spacing:.06em}
@@ -148,7 +148,7 @@ h1{margin:24px 0 0;font:700 clamp(44px,5vw,76px)/1.02 var(--display);letter-spac
 }
 @media (max-width:900px){
   .scene{height:auto;min-height:100svh}
-  .hero{grid-template-columns:1fr;padding:104px max(20px,5vw) 96px;gap:34px;align-content:start;align-items:start}
+  .hero{grid-template-columns:1fr;padding:104px max(20px,5vw) 96px;gap:34px;align-items:start}
   .copy{max-width:none}
   .hud{max-width:560px;justify-self:start;align-self:auto;display:block;min-height:0}
   .hud__read{margin:6px 0 14px}
