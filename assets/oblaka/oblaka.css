@@ -102,9 +102,9 @@ h1{margin:24px 0 0;font:700 clamp(44px,5vw,76px)/1.02 var(--display);letter-spac
 .hud__read span{display:block;font:600 11px/1 var(--mono);letter-spacing:.16em;color:rgba(255,255,255,.64)}
 .hud__read b{display:block;margin-top:10px;font:600 clamp(40px,3.3vw,48px)/1 var(--display);letter-spacing:-.03em;color:#fff;font-variant-numeric:tabular-nums}
 
-.hud__chat{display:grid;align-content:start;gap:8px;height:118px;overflow:hidden;font-size:16.5px;line-height:1.4;transition:opacity .25s}
+.hud__chat{display:grid;align-content:center;gap:8px;height:118px;overflow:hidden;font-size:16.5px;line-height:1.4;transition:opacity .25s}
 .hud__chat.swapping{opacity:.38}
-.hud__chat p{margin:0;display:grid;grid-template-columns:124px 1fr;gap:10px;align-items:baseline;opacity:0;animation:fadeUp .6s cubic-bezier(.2,.8,.2,1) both}
+.hud__chat p{margin:0;display:grid;grid-template-columns:136px 1fr;gap:10px;align-items:baseline;opacity:0;animation:fadeUp .6s cubic-bezier(.2,.8,.2,1) both}
 .hud__chat p:nth-child(1){animation-delay:1.35s}
 .hud__chat p:nth-child(2){animation-delay:1.5s}
 .hud__chat .tag{font:600 12px/1.6 var(--mono);letter-spacing:.05em;color:rgba(255,255,255,.58)}
